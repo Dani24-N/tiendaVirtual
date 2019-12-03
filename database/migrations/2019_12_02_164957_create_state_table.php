@@ -15,10 +15,11 @@ class CreateStateTable extends Migration
     {
         Schema::create('state', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_type_state');
+            $table->integer('type_state_id');
             $table->string('state_name');
             $table->text('description');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -15,10 +15,11 @@ class CreateListOrderTable extends Migration
     {
         Schema::create('list_order', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_order');
-            $table->integer('id_product');
+            $table->integer('order_id');
+            $table->integer('product_id');
             $table->integer('quantity');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

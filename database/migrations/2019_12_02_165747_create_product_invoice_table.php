@@ -15,12 +15,13 @@ class CreateProductInvoiceTable extends Migration
     {
         Schema::create('product_invoice', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_user');
+            $table->integer('user_id');
             $table->integer('invoice_number');
             $table->date('date_create');
             $table->float('total');
-            $table->integer('id_estado');
+            $table->enum('estado',['Abierto','pagado','Cancelado']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

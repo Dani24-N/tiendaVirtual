@@ -15,11 +15,12 @@ class CreateProductQualificationTable extends Migration
     {
         Schema::create('product_qualification', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_user');
-            $table->integer('id_product');
+            $table->integer('user_id');
+            $table->integer('product_id');
             $table->enum('qualificaion',[0,1,2,3,4,5,6,7,8,9,10]);
             $table->boolean('state');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

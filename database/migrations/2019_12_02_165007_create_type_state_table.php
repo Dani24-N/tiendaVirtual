@@ -18,6 +18,7 @@ class CreateTypeStateTable extends Migration
             $table->string('type_state_name');
             $table->text('description');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

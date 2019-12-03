@@ -20,13 +20,14 @@ class CreateUsersTable extends Migration
             $table->string('nickname');
             $table->string('email');
             //$table->timestamp('email_verified_at')->nullable();
-            $table->integer('id_type_document');
+            $table->integer('type_document_id');
             $table->integer('number_document');
             $table->string('password');
-            $table->integer('id_city');
-            $table->integer('id_role');
-            $table->integer('id_state');
+            $table->integer('city_id');
+            $table->integer('role_id');
+            $table->integer('state_id');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

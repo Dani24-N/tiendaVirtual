@@ -15,10 +15,11 @@ class CreateProductFavoriteTable extends Migration
     {
         Schema::create('product_favorite', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_usuario');
-            $table->integer('id_product');
+            $table->integer('user_id');
+            $table->integer('product_id');
             $table->boolean('state');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

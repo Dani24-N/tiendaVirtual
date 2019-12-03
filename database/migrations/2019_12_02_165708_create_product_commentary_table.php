@@ -15,11 +15,12 @@ class CreateProductCommentaryTable extends Migration
     {
         Schema::create('product_commentary', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_user');
-            $table->integer('id_product');
+            $table->integer('user_id');
+            $table->integer('product_id');
             $table->text('commentary');
             $table->boolean('state');//No se si quieras utilizar el Softdelete baby
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

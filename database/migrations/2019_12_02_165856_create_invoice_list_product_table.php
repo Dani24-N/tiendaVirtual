@@ -15,11 +15,12 @@ class CreateInvoiceListProductTable extends Migration
     {
         Schema::create('invoice_list_product', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_invoice');
-            $table->integer('id_product');
+            $table->integer('invoice_id');
+            $table->integer('product_id');
             $table->integer('cantidad');
             $table->float('price');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

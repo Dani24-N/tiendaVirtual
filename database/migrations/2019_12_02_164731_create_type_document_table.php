@@ -18,6 +18,7 @@ class CreateTypeDocumentTable extends Migration
             $table->string('document_name');
             $table->text('description');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

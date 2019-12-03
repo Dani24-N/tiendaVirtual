@@ -15,11 +15,12 @@ class CreateOrderTable extends Migration
     {
         Schema::create('order', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_user');
-            $table->integer('id_invoice');
+            $table->integer('user_id');
+            $table->integer('invoice_id');
             $table->integer('quantity');
             $table->dateTime('time_limit');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
