@@ -6,6 +6,9 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Break_;
+use PhpParser\Node\Stmt\Return_;
+use App\Notifications\SignupActivate;
 
 class AuthController extends Controller
 {
@@ -15,43 +18,55 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string',
             'lastname' => 'required|string',
-            'nickname' => 'required|string',
-            'type_document_id' => 'required|string',
-            'number_document' => 'required|string',
-            'city_id' => 'required|string',
-            'role_id' => 'required|string',
-            'state_id' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' =>'required|string|confirmed',
         ]);
 
         $user = new User([
             'name' => $request->name,
-            'email' => $request->email,
             'lastname' => $request->lastname,
-            'nickname' => $request->nickname,
-            'type_document_id' => $request->type_document_id,
-            'number_document' => $request->number_document,
-            'city_id' => $request->city_id,
-            'role_id' => $request->role_id,
-            'state_id' => $request->state_id,
+            'email' => $request->email,
+            'role_id' => 1,
+            'state_id' => 2,
             'password' => bcrypt($request->password),
+            'activation_token' => str_random(60),
         ]);
 
         $user->save();
 
-        return response()->json(['message' => 'Successfully created user!'],201);
+        $user->notify(new SignupActivate($user));
+
+        return response()->json([
+            'message' => 'Excelente se ha creado el usuario!',
+            'content'=> 'Se te envio un correo para que actives tu cuenta',
+            ],201);
     }
 
     public function login(Request $request){
+
         $request->validate([
-            'email' => 'require|string|email',
+            'user' => 'required|string',
             'password' => 'required|string',
-            'remember_me' => 'bollean',
+            'remember_me' => 'boolean',
         ]);
-        $credentials = request(['email','password']);
-        if(!Auth::attempt($credentials)){
-            return response()->json(['message'=>'Unauthorized'],401);
+
+        $credentials = request(['user','password']);
+        $credentials['state_id'] = 1;
+        $credentials['deleted_at']= null;
+        $keys= array('nickname','email','number_document');
+        for($i=0;$i <=count($keys); $i++){
+            if(Auth::attempt([$keys[$i] => $credentials['user'] , 'password' => $credentials['password']])){
+                $stateUser= Auth::user()->state_id;
+                if($stateUser == 2){
+                    return response()->json(['message'=>'Inactivo']);
+                }elseif($stateUser == 3){
+                    return response()->json(['message'=>'Bloqueado Grocero']);
+                }
+            break;
+            }
+            else if($i == 2){
+             return response()->json(['message'=>'Unauthorized'],401);
+            }
         }
 
         $user =  $request->user();
@@ -70,6 +85,7 @@ class AuthController extends Controller
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at)->toDateTimeString(),
         ]);
+
     }
 
     public function logout(Request $request){
@@ -81,5 +97,14 @@ class AuthController extends Controller
     public function user (Request $request)
     {
         return response()->json($request->user());
+    }
+
+    public function signupActivate($token){
+        $user = User::where('activation_token','=',$token)->first();
+        $user->state_id = 1;
+        $user->activation_token = '';
+        $user->save();
+
+        return $user;
     }
 }
