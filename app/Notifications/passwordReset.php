@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class SignupActivate extends Notification
+class passwordReset extends Notification
 {
     use Queueable;
 
@@ -40,12 +40,12 @@ class SignupActivate extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = url('/user/auth/signup/activate/'.$notifiable->activation_token);
+        $url = url('/user/reset/password/change/'.$notifiable->token);
         return (new MailMessage)
-                    ->subject('Confirmar cuenta')
-                    ->line('Gracias por suscrbirte! Antes de continuar, debes activar tu cuenta.')
-                    ->action('Activar cuenta', url($url))
-                    ->line('Gracias por utilizar nuestro sitio web!');
+                    ->subject('Recuperar Contraseña')
+                    ->line('Preciosa el boton para realizar el cambio de contraseña!.')
+                    ->action('Notification Action', url($url))
+                    ->line('Thank you for using our application!');
     }
 
     /**

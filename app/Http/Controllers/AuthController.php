@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use PhpParser\Node\Stmt\Break_;
 use PhpParser\Node\Stmt\Return_;
 use App\Notifications\SignupActivate;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -28,7 +29,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'role_id' => 1,
             'state_id' => 2,
-            'password' => bcrypt($request->password),
+            'password' => Hash::make($request->password),
             'activation_token' => str_random(60),
         ]);
 
@@ -101,10 +102,13 @@ class AuthController extends Controller
 
     public function signupActivate($token){
         $user = User::where('activation_token','=',$token)->first();
+        if(empty($user)){
+            return response()->json(['message' => 'Ya esta activa tu cuenta!'],200);
+        }
         $user->state_id = 1;
         $user->activation_token = '';
         $user->save();
 
-        return $user;
+        return response()->json(['message' => 'Cuenta verificada correctamente!'],200);
     }
 }
