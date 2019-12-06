@@ -9,9 +9,9 @@ class Password_Reset extends Model
 {
     use Notifiable;
 
-    protected $fillable = ['email',];
+    protected $fillable = ['email'];
 
-    protected $hidden = ['token',];
+    protected $hidden = ['token'];
 
     protected $table = 'password_resets';
 

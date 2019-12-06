@@ -13,7 +13,7 @@ class CreatePasswordHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('password__histories', function (Blueprint $table) {
+        Schema::create('password_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('password_last');
@@ -21,7 +21,7 @@ class CreatePasswordHistoriesTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::table('password__histories', function (Blueprint $table) {
+        Schema::table('password_histories', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
         });
     }

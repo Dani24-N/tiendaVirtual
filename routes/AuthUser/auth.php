@@ -13,4 +13,5 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'reset'],function () {
     Route::post('password/reset','ResetPasswordController@notificationReset');
     Route::get('password/change/{token}','ResetPasswordController@verificationAction');
+    Route::post('password/save','ResetPasswordController@changesPassword');
 });
